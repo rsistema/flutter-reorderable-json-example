@@ -1,14 +1,16 @@
-class Person {
+class CustomObject {
   int? index;
   String? name;
   String? value;
+  String? icon;
 
-  Person({this.index, this.name, this.value});
+  CustomObject({this.index, this.name, this.value, this.icon});
 
-  Person.fromJson(Map<String, dynamic> json) {
+  CustomObject.fromJson(Map<String, dynamic> json) {
     index = json['index'];
     name = json['name'];
     value = json['value'];
+    icon = json['icon'];
   }
 
   Map<String, dynamic> toJson() {
@@ -16,6 +18,7 @@ class Person {
     data['index'] = this.index;
     data['name'] = this.name;
     data['value'] = this.value;
+    data['icon'] = this.icon;
     return data;
   }
 }

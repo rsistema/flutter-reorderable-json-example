@@ -1,0 +1,28 @@
+{
+  "data": [
+    {
+      "index": 0,
+      "name": "Mouse",
+      "value": "f2a47c6809d88e175dade0ef7b16aa13",
+      "icon": "0xe40b"
+    },
+    {
+      "index": 1,
+      "name": "Keyboard",
+      "value": "6ce4d85a628a88bbdb3ac24a8e5a9c2e",
+      "icon": "0xe351"
+    },
+    {
+      "index": 2,
+      "name": "Monitor",
+      "value": "d2986ac8cb6bd55892099c1ffd6b1f6f",
+      "icon": "0xe3fb"
+    },
+    {
+      "index": 3,
+      "name": "Case",
+      "value": "0819eb30cc2cd18cf6b02042458c5da1",
+      "icon": "0xe185"
+    }
+  ]
+}

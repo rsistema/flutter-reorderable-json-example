@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'person.dart';
+import 'custom_object.dart';
 
 void main() {
   runApp(const MyApp());
@@ -33,7 +33,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  List<Person> _person = [];
+  List<CustomObject> _customObject = [];
 
   @override
   void initState() {
@@ -45,40 +45,39 @@ class _MyHomePageState extends State<MyHomePage> {
 
   loadUserConfiguration() async {
     final prefs = await SharedPreferences.getInstance();
-    final String? person = prefs.getString('persons');
+    final String? peripherals = prefs.getString('peripherals');
     List<dynamic> items = [];
 
-    if (person != null) {
-      items =  json.decode(person!);
+    if (peripherals != null) {
+      items =  json.decode(peripherals);
     } else {
-      String data = await rootBundle.loadString('lib/persons.json');
+      String data = await rootBundle.loadString('lib/peripherals.json');
       items = json.decode(data)["data"];
     }
 
-    items.forEach((element) {
+    for (var element in items) {
       setState(() {
-        _person.add(Person.fromJson(element));
+        _customObject.add(CustomObject.fromJson(element));
       });
-    });
+    }
   }
 
   Future<void> _saveChanges() async {
     try {
       final prefs = await SharedPreferences.getInstance();
-      await prefs.setString("persons", json.encode(_person));
+      await prefs.setString("peripherals", json.encode(_customObject));
     } catch (e) {
       print(e.toString());
     }
-
   }
 
   Future<void> _deleteChanges() async {
     try {
       final prefs = await SharedPreferences.getInstance();
-      await prefs.remove('persons');
+      await prefs.remove('peripherals');
 
       setState(() {
-        _person = [];
+        _customObject = [];
       });
 
       await loadUserConfiguration();
@@ -99,12 +98,19 @@ class _MyHomePageState extends State<MyHomePage> {
               child: ReorderableListView(
                 padding: const EdgeInsets.symmetric(horizontal: 40),
                 children: <Widget>[
-                  for (int index = 0; index < _person.length; index += 1)
+                  for (int index = 0; index < _customObject.length; index += 1)
                     ListTile(
                       key: Key('$index'),
+                      leading: Icon(
+                          IconData(
+                              int.parse(_customObject[index].icon!
+                              ),
+                              fontFamily: 'MaterialIcons')
+                      ),
                       //tileColor: per[index].isOdd ? oddItemColor : evenItemColor,
-                      title: Text('Item ${_person[index].name}'),
-                      subtitle: Text('Sub ${_person[index].value}'),
+                      title: Text(_customObject[index].name!),
+                      subtitle: Text(_customObject[index].value!),
+
                     ),
                 ],
                 onReorder: (int oldIndex, int newIndex) {
@@ -112,11 +118,9 @@ class _MyHomePageState extends State<MyHomePage> {
                     if (oldIndex < newIndex) {
                       newIndex -= 1;
                     }
-                    final ppp = _person[oldIndex];
-                    final a = _person[oldIndex].name;
-                    final b = _person[oldIndex].value;
-                    final item = _person.removeAt(oldIndex);
-                    _person.insert(newIndex, ppp);
+                    final temp = _customObject[oldIndex];
+                    _customObject.removeAt(oldIndex);
+                    _customObject.insert(newIndex, temp);
                   });
                 },
               )
@@ -125,13 +129,13 @@ class _MyHomePageState extends State<MyHomePage> {
               onPressed: () async {
                 await _saveChanges();
               },
-              child: Text("Save Changes")
+              child: const Text("Save Changes")
           ),
           TextButton(
               onPressed: () async {
                 await _deleteChanges();
               },
-              child: Text("Delete/Reset Changes")
+              child: const Text("Delete/Reset Changes")
           )
         ],
       ),
